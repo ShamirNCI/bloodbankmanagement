@@ -12,6 +12,42 @@ from donor import models as dmodels
 from patient import models as pmodels
 from donor import forms as dforms
 from patient import forms as pforms
+from django.http import HttpResponse
+#---------------------
+import io
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from django.template import Context
+
+
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = io.BytesIO()
+    pdf = pisa.pisaDocument(io.BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return
+
+
+def download_pdf_view(request,pk):
+    #asset_main = AssetMain.objects.filter(id=pk)
+    #print(asset_main)
+    #dischargeDetails=models.PatientDischargeDetails.objects.all().filter(patientId=pk).order_by('-id')[:1]
+    dict={
+
+        'id':'test',
+        'assestname':'test',
+        'tag':'test',
+        'serialno':'test',
+        'location':'test',
+        'issuedescription':'test',
+        'assignedengineer':'test',
+        'issueraisedon':'test',
+        'issuesolvedon':'test',
+        'comments':'test',
+    }
+    return render_to_pdf('patient/download_bill.html',dict)
 
 def home_view(request):
     x=models.Stock.objects.all()
