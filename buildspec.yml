@@ -1,10 +1,4 @@
 version: 0.2
-env:
-  secrets-manager:
-    LOGIN: prod/sonar:sonartoken
-    HOST: prod/sonar:HOST
-    Organization: prod/sonar:Organization
-    Project: prod/sonar:Project
 phases:
     install:
         runtime-versions:
@@ -12,21 +6,10 @@ phases:
         commands:
             - pip install --upgrade pip
             # Install dependencies needed for running the static analysis
-            - pip install -r requirements.txt 
+            - pip install -r requirements.txt
     pre_build:
         commands:
             - python --version
-            - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
-            - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
-            - export PATH=$PATH:/sonar-scanner-3.3.0.1492-linux/bin/
-    build:
-        commands:
-            - sonar-scanner \
-                -Dsonar.organization=shamirnci \
-                -Dsonar.projectKey=samplekeyshamirblood \
-                -Dsonar.sources=. \
-                -Dsonar.host.url=https://sonarcloud.io
-            
 artifacts:
     files:
         - '**/*'
